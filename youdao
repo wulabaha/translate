@@ -1,0 +1,36 @@
+
+import requests,bs4
+ 
+####单词去除空格，名词符号####
+def word_format(word):
+    #去掉空格
+    word1 = word.strip()
+    word2 = word1.replace("\n",'')
+    word3 = word2.replace('n.','')
+    word4 = word3.replace(" ",'')
+    return word4
+ 
+ 
+###翻译一个单词
+def Get_full_translation(word):
+    url = "http://dict.youdao.com/w/%s/#keyfrom=dict.index"%(word)
+    res = requests.get(url)
+    soup = bs4.BeautifulSoup(res.text,"lxml")
+    elems = soup.select('.trans-container')
+    translation = elems[0].text
+    translation1 = translation.replace('\n','')
+    return translation1
+ 
+###翻译简单版本
+def Get_simple_translation(word):
+    url = "http://dict.youdao.com/w/%s/#keyfrom=dict.index"%(word)
+    res = requests.get(url)
+    soup = bs4.BeautifulSoup(res.text,"lxml")
+    elems = soup.select('.trans-container')
+    translation = elems[0].text
+    translation1 = word_format(translation)
+    ###分割
+    wordTranslation_list = translation1.split("；")
+    ##获取第一个
+    translation2 = wordTranslation_list[0]
+    return translation2
